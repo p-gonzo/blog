@@ -5,11 +5,16 @@
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
 module.exports = {
-  siteName: 'Philip Gonzalez\'s blog',
+  siteName: 'Philip Gonzalez',
   siteDescription: 'I write about code, science, and other things that interest me.',
 
   templates: {
-    Post: '/:title',
+    Post: [
+      {
+        path: '/blog/posts/:title',
+        component: './src/templates/Post.vue'
+      }
+    ],
     Tag: '/tag/:id'
   },
 

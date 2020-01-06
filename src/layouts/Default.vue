@@ -3,7 +3,7 @@
 
     <header class="header">
       <div class="header__left">
-        <Logo v-if="showLogo" /> 
+        <slot name="additional-headings" />
       </div>
       
       <div class="header__right">        
@@ -24,15 +24,10 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
 import ToggleTheme from '~/components/ToggleTheme.vue'
 
 export default {
-  props: {
-    showLogo: { default: true }
-  },
   components: {
-    Logo,
     ToggleTheme
   }
 }

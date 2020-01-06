@@ -1,5 +1,8 @@
 <template>
   <Layout>
+    <template slot="additional-headings">
+      <BackButton :text="'blog'" :location="'/blog'" />
+    </template>
     <div class="post-title">
       <h1 class="post-title__text">
         {{ $page.post.title }}
@@ -33,12 +36,14 @@
 import PostMeta from '~/components/PostMeta'
 import PostTags from '~/components/PostTags'
 import Author from '~/components/Author.vue'
+import BackButton from '~/components/NavBackButton.vue'
 
 export default {
   components: {
     Author,
     PostMeta,
-    PostTags
+    PostTags,
+    BackButton
   },
   metaInfo () {
     return {

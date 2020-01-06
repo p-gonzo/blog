@@ -1,5 +1,8 @@
 <template>
   <Layout>
+    <template slot="additional-headings">
+      <BackButton :text="'blog'" :location="'/blog'" />
+    </template>
     <h1 class="tag-title text-center space-bottom">
       # {{ $page.tag.title }}
     </h1>
@@ -35,11 +38,13 @@ query Tag ($id: ID!) {
 <script>
 import Author from '~/components/Author.vue'
 import PostCard from '~/components/PostCard.vue'
+import BackButton from '~/components/NavBackButton.vue'
 
 export default {
   components: {
     Author,
-    PostCard
+    PostCard,
+    BackButton
   },
   metaInfo: {
     title: 'Philip Gonzalez'
