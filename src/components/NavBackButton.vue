@@ -1,8 +1,6 @@
 <template>
 	<g-link class="nav-button" :to="location">
-	  <span>
-	    &larr; {{ this.text }}
-	  </span>
+		<span>&larr; {{ this.text }}</span>
 	</g-link>
 </template>
 
