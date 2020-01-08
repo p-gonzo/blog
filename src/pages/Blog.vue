@@ -3,14 +3,10 @@
     <template slot="additional-headings">
       <BackButton :text="'philip gonzalez'" :location="'/'" />
     </template>
-    <!-- Author intro -->
     <Author :show-title="true" />
-
-    <!-- List posts -->
     <div class="posts">
       <PostCard v-for="edge in $page.posts.edges" :key="edge.node.id" :post="edge.node"/>
     </div>
-
   </Layout>
 </template>
 

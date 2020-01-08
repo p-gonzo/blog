@@ -33,6 +33,13 @@ module.exports = {
           }
         }
       }
+    },
+    {
+      use: '@gridsome/source-filesystem',
+      options: {
+        typeName: 'Project',
+        path: 'content/projects/*.md',
+      }
     }
   ],
 
