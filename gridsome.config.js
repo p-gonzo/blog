@@ -15,6 +15,12 @@ module.exports = {
         component: './src/templates/Post.vue'
       }
     ],
+    Project: [
+      {
+        path: '/projects/:title',
+        component: './src/templates/Project.vue'
+      }
+    ],
     Tag: '/tag/:id'
   },
 

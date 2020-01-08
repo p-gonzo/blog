@@ -17,9 +17,6 @@ export default {
     Author,
     PostCard,
     NavLocations
-  },
-  metaInfo: {
-    title: 'Philip Gonzalez'
   }
 }
 </script>

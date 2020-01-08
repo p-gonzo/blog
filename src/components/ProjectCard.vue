@@ -1,35 +1,25 @@
 <template>
-  <div class="post-card content-box">
-    <div class="post-card__header">
-      <g-image alt="Cover image" v-if="post.cover_image" class="post-card__image" :src="post.cover_image" />
+  <div class="project-card content-box">
+    <div class="project-card__header">
+      <g-image alt="Cover image" v-if="project.cover_image" class="project-card__image" :src="project.cover_image" />
     </div>
-    <div class="post-card__content">
-      <h2 class="post-card__title" v-html="post.title" />
-      <p class="post-card__description" v-html="post.description" />
-
-      <PostMeta class="post-card__meta" :post="post" />
-      <PostTags class="post-card__tags" :post="post" />
-
-      <g-link class="post-card__link" :to="post.path">Link</g-link>
+    <div class="project-card__content">
+      <h2 class="project-card__title" v-html="project.title" />
+      <p class="project-card__description" v-html="project.description" />
+      <g-link class="project-card__link" :to="project.path">Link</g-link>
     </div>
   </div>
 </template>
 
 <script>
-import PostMeta from '~/components/PostMeta'
-import PostTags from '~/components/PostTags'
 
 export default {
-  components: {
-    PostMeta,
-    PostTags
-  },
-  props: ['post'],
+  props: ['project'],
 }
 </script>
 
 <style lang="scss">
-.post-card {
+.project-card {
   margin-bottom: var(--space);
   position: relative;
 

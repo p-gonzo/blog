@@ -3,10 +3,10 @@
         <g-link class="nav-button" to="/blog">
         <span>blog</span>
         </g-link>
-        <g-link class="nav-button" to="/blog">
+        <g-link class="nav-button" to="/projects">
         <span>projects</span>
         </g-link>
-        <g-link class="nav-button" to="/blog">
+        <g-link class="nav-button" to="/">
         <span>contact</span>
         </g-link>
     </div>
