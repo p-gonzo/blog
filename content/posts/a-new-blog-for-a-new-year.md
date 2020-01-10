@@ -1,5 +1,5 @@
 ---
-title: A new blog for a new year
+title: 🎉 A new blog for a new year
 date: 2020-01-01
 published: true
 tags: ['Blog', 'Python', 'Flask', 'Heroku']

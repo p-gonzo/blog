@@ -5,6 +5,8 @@
       <div class="header__left">
         <slot name="additional-headings" />
       </div>
+
+      <div v-if="authorInNav" class="header__center">Philip Gonzalez</div>
       
       <div class="header__right">        
         <ToggleTheme />
@@ -30,6 +32,7 @@ export default {
   components: {
     ToggleTheme
   },
+  props: ['authorInNav'],
   methods: {
     toggleBoxShadowOnNav() {
       if (window.pageYOffset < 60) {
@@ -74,9 +77,17 @@ export default {
   transition: 0.3s;
 
   &__left,
-  &__right {
+  &__right,
+  &__center{
     display: flex;
-    align-items: center;
+    width: 33%
+  }
+
+  &__center {
+    justify-content: space-around;
+  }
+  &__right {
+    flex-direction: row-reverse;
   }
 }
 

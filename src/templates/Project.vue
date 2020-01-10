@@ -1,5 +1,5 @@
 <template>
-  <Layout>
+  <Layout :authorInNav="true">
     <template slot="additional-headings">
       <BackButton :text="'projects'" :location="'/projects'" />
     </template>

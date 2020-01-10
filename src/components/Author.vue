@@ -12,8 +12,9 @@
 		</p>
 
 		<p class="author__links">
-			<a href="//twitter.com/gridsome">Follow on Twitter</a>
-			<a href="//github.com/gridsome/gridsome-starter-blog">GitHub</a>
+			<a href="//github.com/p-gonzo" target="_blank">GitHub</a>
+			<a href="//linkedin.com/in/philip-g-gonzalez" target="_blank">LinkedIn</a>
+			<a href="mailto:pgonzalez115@gmail.com">Email</a>
 		</p>
 
 	</div>

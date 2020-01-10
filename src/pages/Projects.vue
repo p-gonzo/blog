@@ -1,7 +1,7 @@
 <template>
   <Layout >
     <template slot="additional-headings">
-      <BackButton :text="'philip gonzalez'" :location="'/'" />
+      <BackButton :text="'home'" :location="'/'" />
     </template>
     <Author :show-title="true" />
     <div class="projects">
