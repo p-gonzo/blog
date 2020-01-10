@@ -7,6 +7,7 @@
 module.exports = {
   siteName: 'Philip Gonzalez',
   siteDescription: 'I write about code, science, and other things that interest me.',
+  siteUrl: 'https://p-gonzo.github.io',
 
   templates: {
     Post: [
