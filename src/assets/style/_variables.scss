@@ -14,7 +14,7 @@ body {
  	--border-color:  rgba(0,0,0,.1);;
   --space: 3.5rem;
   --content-width: 860px;
-  --header-height: 80px;
+  --header-height: 60px;
   --radius: 5px;
 }
 
@@ -25,15 +25,14 @@ body {
 	}
 	body {
 		--space: 1.5rem;
-		--header-height: 60px;
 	}
 }
 
 
 // Override variables for Dark theme
 body[data-theme="dark"] {
- 	--bg-color: #0D2538;
- 	--bg-content-color: #0f2d44;
+ 	--bg-color: rgb(30, 30, 30);
+ 	--bg-content-color: rgb(9, 53, 57);
  	--bg-code: rgba(0,0,0,.3);
  	--border-color:  rgba(255,255,255,.1);;
  	--body-color: #ced8de;

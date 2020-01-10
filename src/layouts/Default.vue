@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <header class="header">
+    <header ref="navbar" class="header">
       <div class="header__left">
         <slot name="additional-headings" />
       </div>
@@ -29,6 +29,32 @@ import ToggleTheme from '~/components/ToggleTheme.vue'
 export default {
   components: {
     ToggleTheme
+  },
+  methods: {
+    toggleBoxShadowOnNav() {
+      if (window.pageYOffset < 60) {
+        this.$refs.navbar.style.boxShadow = 'none';
+      } else {
+        this.$refs.navbar.style.boxShadow = '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)';
+      }
+    },
+    toggNav(prevScrollpos, currentScrollPos) {
+      if (prevScrollpos > currentScrollPos) {
+        this.$refs.navbar.style.top = '0';
+      } else {
+        this.$refs.navbar.style.top = '-60px';
+        this.$refs.navbar.style.boxShadow = 'none';
+      }
+    }
+  },
+  mounted() {
+    let prevScrollpos = window.pageYOffset;
+    window.onscroll = () => {
+      let currentScrollPos = window.pageYOffset;
+      this.toggleBoxShadowOnNav();
+      this.toggNav(prevScrollpos, currentScrollPos);
+      prevScrollpos = currentScrollPos;
+    }
   }
 }
 </script>
@@ -40,19 +66,17 @@ export default {
   align-items: center;
   min-height: var(--header-height);
   padding: 0 calc(var(--space) / 2);
+  position: sticky;
   top:0;
   z-index: 10;
+  width: 100%;
+  background-color: var(--bg-color);
+  transition: 0.3s;
 
   &__left,
   &__right {
     display: flex;
     align-items: center;
-  }
-
-  @media screen and (min-width: 1300px) {
-    //Make header sticky for large screens
-    position: sticky;
-    width: 100%;
   }
 }
 
