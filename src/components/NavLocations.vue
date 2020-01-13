@@ -6,9 +6,9 @@
       <g-link class="nav-button" to="/projects">
         <span>projects</span>
       </g-link>
-      <g-link class="nav-button" to="/">
-        <span>contact</span>
-      </g-link>
+      <a class="nav-button" href="mailto:pgonzalez115@gmail.com">
+        <span>email</span>
+      </a>
     </div>
 </template>
 

@@ -9,6 +9,8 @@ canonical_url: false
 description: "As part of my pending New Years resolutions, I decided that I wanted to do more technical writing.  So, as a means to an end, I created a lightweight blog and accompanying content management system (CMS)."
 ---
 
+**UPDATE (1/12/20)**: This blog is no runs as described below.  Though it was fun rolling a custom CMS from scratch, I have since migrated to the static site generator [Gridsome](https://gridsome.org/) and Github Pages for hosting.  Credit goes to [Brian Schiller](https://brianschiller.com/) for shaming me out of paying for hosting costs and sharing Gridsome with me.  The source code for this project is still publicly available on [Github](https://github.com/p-gonzo/flask-cms-blog).
+
 As part of my pending New Years resolutions, I decided that I wanted to do more technical writing.  So, as a means to an end, I created a lightweight blog and accompanying content management system (CMS).
 
 Though I had used other blogging CMS platforms in the past, namely *Wordpress* and *Medium*, I wasn't satisfied with their [walled-garden](https://en.wikipedia.org/wiki/Closed_platform) approach to content management. I wanted the flexibility of having complete ownership of my content and platform, so that if I ever wanted to take my posts elsewhere, a simple database migration would suffice.  I also am very particular about what I want and and don't want in a user-interface.  So given these considerations, developing a simple blogging platform from scratch was the way to go.
