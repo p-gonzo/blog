@@ -3,7 +3,8 @@
     <template slot="additional-headings">
       <BackButton :text="'home'" :location="'/'" />
     </template>
-    <Author :show-title="true" />
+    <h1 id="page-title">blog</h1>
+    <Author :show-title="false" />
     <div class="posts">
       <PostCard v-for="edge in $page.posts.edges" :key="edge.node.id" :post="edge.node"/>
     </div>

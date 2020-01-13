@@ -6,7 +6,11 @@
         <slot name="additional-headings" />
       </div>
 
-      <div v-if="authorInNav" class="header__center">Philip Gonzalez</div>
+      <div v-if="authorInNav" class="header__center">
+        <g-link class="nav-button" to="/">
+          <span>Philip Gonzalez</span>
+        </g-link>
+      </div>
       
       <div class="header__right">        
         <ToggleTheme />
@@ -18,7 +22,8 @@
     </main>
 
     <footer class="footer">
-      <span class="footer__copyright">Copyright © {{ new Date().getFullYear() }}. </span>
+      <span class="footer__copyright">© 2019 - {{ new Date().getFullYear() }} Philip Gonzalez | </span>
+      <span class="footer__links">Source available on <a href="https://github.com/p-gonzo/blog"> Github</a> | </span>
       <span class="footer__links">Powered by <a href="//gridsome.org"> Gridsome </a></span>
     </footer>
 

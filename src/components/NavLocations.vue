@@ -1,8 +1,8 @@
 <template>
     <div>
       <g-link class="nav-button" to="/blog">
-      <span>blog</span>
-        </g-link>
+        <span>blog</span>
+      </g-link>
       <g-link class="nav-button" to="/projects">
         <span>projects</span>
       </g-link>

@@ -3,7 +3,8 @@
     <template slot="additional-headings">
       <BackButton :text="'home'" :location="'/'" />
     </template>
-    <Author :show-title="true" />
+    <h1 id="page-title">projects</h1>
+    <Author :show-title="false" />
     <div class="projects">
       <ProjectCard v-for="edge in $page.projects.edges" :key="edge.node.id" :project="edge.node"/>
     </div>
