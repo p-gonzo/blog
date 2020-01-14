@@ -119,5 +119,7 @@ while (Serial.available())
 
 The Arduino receives the char commands over the serial port, adjusts the flag's position, and writes user information to the LCD display.
 
+Though I don't still have schematics for the hardware portion of the project, they should be easy enough to infer from the code and the simple components used.  If you have any questions about the Pysical Gmail Notifier, or would like to discuss an IoT implementation, please feel free to <a href="mailto:pgonzalez115@gmail.com">contact me</a>.
+
 
 ##### The full project source is available on [Github](https://github.com/p-gonzo/physical-gmail-notifier).

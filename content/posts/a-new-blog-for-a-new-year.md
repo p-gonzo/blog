@@ -9,7 +9,7 @@ canonical_url: false
 description: "As part of my pending New Years resolutions, I decided that I wanted to do more technical writing.  So, as a means to an end, I created a lightweight blog and accompanying content management system (CMS)."
 ---
 
-**UPDATE (1/12/20)**: This blog is no runs as described below.  Though it was fun rolling a custom CMS from scratch, I have since migrated to the static site generator [Gridsome](https://gridsome.org/) and Github Pages for hosting.  Credit goes to [Brian Schiller](https://brianschiller.com/) for shaming me out of paying for hosting costs and sharing Gridsome with me.  The source code for this project is still publicly available on [Github](https://github.com/p-gonzo/flask-cms-blog).
+**UPDATE (1/12/20)**: This blog no longer runs as described below.  Though it was fun rolling a custom CMS from scratch, I have since migrated to the static site generator [Gridsome](https://gridsome.org/) and Github Pages for hosting.  Credit goes to [Brian Schiller](https://brianschiller.com/) for shaming me out of paying for hosting costs and sharing Gridsome with me.  The source code for this project is still publicly available on [Github](https://github.com/p-gonzo/flask-cms-blog).
 
 As part of my pending New Years resolutions, I decided that I wanted to do more technical writing.  So, as a means to an end, I created a lightweight blog and accompanying content management system (CMS).
 
@@ -177,23 +177,57 @@ After removing Bootstrap, I styled the app by-hand with two main CSS files, one 
 
 ### Going old-school with `JQuery`:
 
-Up unto this point I had almost written no JavaScript! 😲  To be sure, there was JavaScript living on my site in the form of SimpleMDE, but other than that, most everything else was server-rendered.  
+Up unto this point I had almost written no JavaScript! 😲  To be sure, there was JavaScript living on my site in the form of SimpleMDE, but other than that, most everything else was server-rendered.  So in order to accomplish a few simple quality of life niceties, I used a grand total of 59 lines of JavaScript to:
+    - Give posts human-readable datetime strings with the [Moment.js](https://momentjs.com/) library (overkill, I know)
+    - Wrap img tags inside of my posts with [FancyBox](http://fancyapps.com/fancybox/3/)
+    - Fade out a div alerts created using Flask Flash with JQuery
+    - Use Vanilla JS to:
+        - Copy a **Markdown** img tag to the clipboard when clicking on an image in the `related media` section of the editor
+        - Create a sticky navbar that hides a header on scroll
 
-`//todo`
+I was actually impressed that I was able to create a decently slick Web App with such little Javascript.
 
-## Reflections on \*NOT\* using a modern SPA framework in 2020:
+### Reflections on <span style="text-decoration: underline">NOT</span> using a modern SPA framework in 2020:
 
-`//todo`
+Reaching for [Jinja Templates](https://jinja.palletsprojects.com/en/2.10.x/) and Jquery in 2020 certainly felt a little bit wrong, but the overall experience wasn't terrible.  In fact, development of the blog was probably speedier than if I had chosen to use a modern framework like React, Vue, or even Angular.
 
+The limitations of not using any AJAX calls and handling everything via web-form `POST` requests however certainly began to have its limitations.  Not using AJAX meant that anything that was related to creating & updating the blog post lived inside of the same `<form \>` tag.
 
-## Caveats:
+Take the image upload feature as an example:  Let's imagine a user is drafting a blog post, and wants to upload an image.  Because there is no AJAX, the page is going to reload.  So in order to preserve the work that the user has already written, we first `POST` the entire contents of the blog draft, save it, and *then* handle the image upload.  In actuality, the image upload field lives inside of the same form used for simply saving a draft.  We just only process the image if the user clicks the `upload image` submit form as opposed to the `save` or `preview` submit forms.  
 
-Using web forms (and no AJAX) for this project has not been without its limitations.  
+The Python code the processes the request ends up looking like this, and it certainly *feels* a little wrong (concatenated for brevity):
 
-`//todo`
+```python
+def _create_or_edit(post, template):
+    # always save the post
+    post.save()
+    flash('Post saved.', 'success')
+
+    # Route user to the preview page
+    if request.form.get('action') == 'preview':
+        return redirect(url_for('preview', slug=post.slug))
+    
+    #handle an image upload
+    elif request.form.get('action') == 'upload-image':
+        file = request.files['file']
+        new_image = Image(post.id, f'{os.environ["AWS_BUCKET_URL"]}/{post.slug}/{filename}')
+        new_image.save()
+        return redirect(request.url)
+    
+    # If the post is published, route user to the 'detail screen'
+    elif post.published:
+        return redirect(url_for('detail', slug=post.slug))
+
+    # Otherwise, just save the post and show user back to the editor
+    else:
+        return redirect(url_for('edit', slug=post.slug))
+
+```
+
+The bummer about this logic is that it has to live inside of a single routing function, so it's difficult to have separate concerns.
 
 ## Next Steps:
-- Tagging and commenting
-`//todo`
+
+Though tagging and commenting are implemented from a database perspective, there isn't yet a web interface for this.  
 
 
