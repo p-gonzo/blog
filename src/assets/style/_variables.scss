@@ -32,7 +32,7 @@ body {
 // Override variables for Dark theme
 body[data-theme="dark"] {
  	--bg-color: rgb(30, 30, 30);
- 	--bg-content-color: rgb(9, 53, 57);
+ 	--bg-content-color: #111;
  	--bg-code: rgba(0,0,0,.3);
  	--border-color:  rgba(255,255,255,.1);;
  	--body-color: #ced8de;
