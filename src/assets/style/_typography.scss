@@ -69,3 +69,17 @@ ol {
     margin-bottom: .6em;
   }
 }
+
+table {
+  margin: 0 auto;
+
+  th {
+    font-weight: bold;
+    background-color: var(--bg-code);
+  }
+
+  th, td {
+    padding: 6px 13px;
+    border: 2px solid var(--border-color);
+  }
+}
