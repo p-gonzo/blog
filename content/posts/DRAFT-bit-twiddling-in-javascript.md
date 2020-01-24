@@ -67,3 +67,6 @@ More interestingly, if we use the numbers 5 and 1:
 <br/>
 
 We can see that when two bits **in the same position** overlap, the `&` operator returns a new number with only the overlapping bits set.  In the case with the comparison with `1`, we, we only are interested in the number's **least significant bit**. 
+
+Masking:
+https://en.wikipedia.org/wiki/Mask_(computing)
