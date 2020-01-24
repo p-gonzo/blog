@@ -7,11 +7,13 @@ html {
 body {
  	--bg-color: #F3F7F9;
  	--bg-content-color: #fff;
- 	--bg-code: #fffbf3;
+	--bg-code: #fffbf3;
+	--bg-table-head: #fffbf3;
+	--bg-table-even-row: #f2f2f2;
  	--body-color: #444;
  	--title-color: #111;
  	--link-color: #6b17e6;
- 	--border-color:  rgba(0,0,0,.1);;
+	--border-color:  rgba(0,0,0,.1);
   --space: 3.5rem;
   --content-width: 860px;
   --header-height: 60px;
@@ -33,7 +35,9 @@ body {
 body[data-theme="dark"] {
  	--bg-color: rgb(30, 30, 30);
  	--bg-content-color: #111;
- 	--bg-code: rgba(0,0,0,.3);
+	--bg-code: rgba(0,0,0,.3);
+	--bg-table-head: rgba(255,255,255,.1);
+	--bg-table-even-row: rgba(255,255,255,.05);
  	--border-color:  rgba(255,255,255,.1);
  	--body-color: #ced8de;
  	--title-color: #fff;

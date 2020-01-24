@@ -59,6 +59,7 @@ pre[class*="language-"] {
 :not(pre) > code[class*="language-"] {
 	border-radius: var(--radius);
 	white-space: normal;
+	color: tomato;
 }
 
 .token.comment,

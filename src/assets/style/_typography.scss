@@ -71,12 +71,16 @@ ol {
 }
 
 table {
-  margin: 0 auto;
+  display: block;
+  overflow-x: auto;
+  width: 100%;
 
   th {
     font-weight: bold;
-    background-color: var(--bg-code);
+    background-color: var(--bg-table-head);
   }
+
+  tr:nth-child(even){background-color: var(--bg-table-even-row)}
 
   th, td {
     padding: 6px 13px;
