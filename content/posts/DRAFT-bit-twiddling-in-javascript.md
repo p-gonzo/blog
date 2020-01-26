@@ -85,9 +85,9 @@ The first command in our loop tells us whether or not the least significant bit 
 This is where the second command in our loop comes in.  By reassigning `n` to `n >> 1`, we shift all of `n`'s bits to the right by exactly one bit.
 
 - The integer 5 in binary is: `101`
-    - and `5 >> 1` is `10` or 2 as a base 10 integer
-    - and `5 >> 1 >> 1` is `1` or 1 as a base 10 integer
-    - finally `5 >> 1 >> 1 >> 1` is `0` or 0 as a base 10 integer
+    - and `5 >> 1` is `10` (**2** as a base 10 integer)
+    - and `5 >> 1 >> 1` is `1` (**1** as a base 10 integer)
+    - finally `5 >> 1 >> 1 >> 1` is `0` (**0** as a base 10 integer)
 
 
 Putting these two aspects of our loop together allow us to display base 10 integers in their binary format:
