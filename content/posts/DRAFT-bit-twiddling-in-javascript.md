@@ -9,7 +9,7 @@ canonical_url: false
 description: ""
 ---
 
-Recently, I have been picking up C++ for a client project.  To get comfortable with the syntax, I worked through a number of [Code Wars](http://codewars.com) challenges.  While completing these, I came across a pretty cool CS challenge to **count the number of set bits** in an integer.
+Recently, I have been picking up C++ for a client project.  To get comfortable with the syntax, I worked through a number of [Code Wars](http://codewars.com) challenges.  One of these was pretty cool CS challenge to **count the number of set bits** in an integer.
 
 The challenge itself involves expressing integers not in their traditional base 10 representation, but instead their using base 2, binary, representation.  For those not familiar with base 10 to base 2 conversations, and what `set bits` are, check out the table below:
 
@@ -49,7 +49,9 @@ The interesting part of the function happens inside of the while loop.  Our func
 
 #### Evaluate `n & 1`, and push the result onto our Array
 
-The first part of our loop uses the bitwise operator `&` (as distinct from the boolean operator `&&`), to evaluate `n` with `1`.  The bitwise `&` operator is similar to the boolean `&&` operator in that it will return `1` if and only if both bits are set to `1`, otherwise it will return `0`, what is different about this operator is that it compares each bit in both numbers separately.
+The first part of our loop uses the bitwise operator `&` (as distinct from the boolean operator `&&`), to evaluate `n` with `1`.
+
+The bitwise `&` operator is similar to the boolean `&&` operator in that it will return `1` if and only if both bits are set to `1`, otherwise it will return `0`, it is different in that it compares each bit in both numbers separately.
 
 For example, if we use the numbers 5 and 7:
 
@@ -73,7 +75,9 @@ More interestingly, if we use the numbers 5 and 1:
 
 We can see that when two bits **in the same position** overlap, the `&` operator returns a new number with only the overlapping bits set.
 
-In the case with the comparison with `1`, we are only are interested in the number's [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering#Least_significant_bit), the rightmost bit that represents either a base 10 1 or 0.  By using the `&` against the number 1, we can check whether the least significant bit is is set or not.  This is also called **bit masking**, or just **masking** for short.  We mask a given integer with 1, and it's return value tells us whether or not the least significant bit is set or not.
+In the case with the comparison with `1`, we are only are interested in the number's [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering#Least_significant_bit), the rightmost bit that represents either a base 10 1 or 0.
+
+By using the `&` against the number 1, we can check whether the least significant bit is is set or not.  This is also called **bit masking**, or just **masking** for short.  We mask a given integer with 1, and it's return value tells us whether or not the least significant bit is set or not.
 
 Given that our loop contains the expression `bits.push(n & 1)`, we will either push a 0 or 1 into our bits array based on whether or not n's least significant bit is set or not. 
 
