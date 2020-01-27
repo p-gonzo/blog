@@ -106,7 +106,7 @@ displayBits(200); // [1, 1, 0, 0, 1, 0, 0, 0]
 
 ### A note on JavaScript Numbers:
 
-Under the hood, JavaScript represents *all* numbers as a 64 bit floating point, so when you use a bitwise operator on a JavaScript number, the number is temporarily transformed into a 32 bit Integer.
+Under the hood, JavaScript represents *all* numbers as a 64 bit floating point numbers, so when we use a bitwise operator on a JavaScript number, the number is temporarily transformed into a 32 bit Integer.
 
 We can demonstrate the conversion to a 32 bit integer by taking a JavaScript number (64 bits), and performing a "non mutating" bit shift by zero on it.)
 
@@ -126,4 +126,12 @@ MDN, has a very good explanation of [some of the quirks](https://developer.mozil
 > After:              10100000000000000110000000000001
 > ```
 
-Because I wrote this post mostly from a standpoint of academic curiosity, we'll ignore this quirk for the time being, however it's certainly notable.
+The take away being, don't expect bitwise operations to work as expected with numbers that are represented with more than 32bits of memory:
+
+```javascript
+parseInt(            "10100000000000000110000000000001", 2); // 2684379137
+parseInt("11100110111110100000000000000110000000000001", 2); // 15872588537857
+
+2684379137 >> 0; // -1610588159
+15872588537857 >> 0; // -1610588159  ¯\_(ツ)_/¯
+```
