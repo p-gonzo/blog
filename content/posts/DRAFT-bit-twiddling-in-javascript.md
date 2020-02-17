@@ -90,58 +90,74 @@ const displayBits = n => {
 (7).toString(2) // "111"
 ```
 
-We will instead use the `displayBits` function above to discuss bitwise operators.  The function stores the ones and zeros in an Array called `bits` and returns it's reversed value.
+We will instead use the `displayBits` function above to discuss bitwise operators.
 
-In the loop, the function evaluates an integer `n`, and while `n` is not falsey:
--   Evaluate `n & 1`, and push the result onto `bits`
--   Reassign `n` to `n >> 1`
+The function stores the ones and zeros in an Array called `bits` and returns it's reversed value.
+
+In the loop, the function evaluates an integer `n`, and while `n` is not falsey it:
+-   Evaluates `n & 1`, and pushes the result onto `bits`
+-   Reassigns `n` to `n >> 1`
 
 
 #### Evaluate `n & 1`, and push the result onto `bits`:
 
-The first part of our loop uses the bitwise operator `&` to evaluate `n` with `1`.
+The bitwise `&` operator compares each bit in two integers and returns `1` if both bits are set to `1`, otherwise it returns `0`.
 
-The bitwise `&` operator is similar to the boolean `&&` operator in that it will return `1` if both bits are set to `1`, otherwise it will return `0`, it is different in that it compares each bit in both numbers separately.
+For example, using 5 and 7:
 
-For example, if we use the numbers 5 and 7:
-
-| base 10 | base 2 |
-|--|--|
+| base 10 | binary |
+|--|--:|
 |`5`|`101`|
 |`7`|`111`|
 |`5 & 7`|`101`|
 
 <br/>
 
-More interestingly, if we use the numbers 5 and 1:
+And using 5 and 1 (our function uses `n & 1`):
 
-| base 10 | base 2 |
-|--|--|
+| base 10 | binary |
+|--|--:|
 |`5`|`101`|
-|`1`|`001` (or just `1`)|
-|`5 & 1`|`001` (or just `1`)|
+|`1`|`  1`|
+|`5 & 1`|`1`|
 
 <br/>
 
-We can see that when two bits **in the same position** overlap, the `&` operator returns a new number with only the overlapping bits set.
+Using 7 and 1:
 
-In the case with the comparison with `1`, we are only are interested in the number's [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering#Least_significant_bit), the rightmost bit that represents either a base 10 1 or 0.
+| base 10 | binary |
+|--|--:|
+|`7`|`111`|
+|`1`|`  1`|
+|`7 & 1`|`1`|
 
-By using the `&` against the number 1, we can check whether the least significant bit is is set or not.  This is also called **bit masking**, or just **masking** for short.  We mask a given integer with 1, and it's return value tells us whether or not the least significant bit is set or not.
+<br/>
 
-Given that our loop contains the expression `bits.push(n & 1)`, we will either push a 0 or 1 into our bits array based on whether or not n's least significant bit is set or not. 
+Using 8 and 1:
+
+| base 10 | binary |
+|--|--:|
+|`8`|`1000`|
+|`1`|`   1`|
+|`8 & 1`|`0`|
+
+<br/>
+
+We can see that when two ones **in the same position** overlap, the `&` operator returns a `1` in that position, otherwise it returns a `0`.
+
+When we perform a bitwise `n & 1` we are only are interested in `n`'s [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering#Least_significant_bit) (its rightmost bit), to see if it is a `0` or `1`.
+
+Because our loop runs `bits.push(n & 1)`, we will either push a `0` or `1` into our bits array based on whether or not `n`'s least significant bit is set or not. 
 
 
 #### Reassign `n` to `n >> 1`:
 
-The first command in our loop tells us whether or not the least significant bit is `1` or `0` (set or not set) and pushes the value into the bits array.  But if we always mask with one, we will only ever check the least significant bit.
-
-This is where the second command in our loop comes in.  By reassigning `n` to `n >> 1`, we shift all of `n`'s bits to the right by exactly one bit.
+By reassigning `n` to `n >> 1`, we shift all of `n`'s bits to the right by exactly one bit.
 
 - The integer 5 in binary is: `101`
-    - and `5 >> 1` is `10` (**2** as a base 10 integer)
-    - and `5 >> 1 >> 1` is `1` (**1** as a base 10 integer)
-    - finally `5 >> 1 >> 1 >> 1` is `0` (**0** as a base 10 integer)
+    - `5 >> 1` is `10` (**2** as a base-10 integer)
+    - `5 >> 1 >> 1` is `1` (**1** as a base-10 integer)
+    - `5 >> 1 >> 1 >> 1` is `0` (**0** as a base-10 integer)
 
 
 Putting these two aspects of our loop together allow us to display base 10 integers in their binary format:
@@ -151,3 +167,10 @@ displayBits(5); // [1, 0, 1]
 displayBits(9); // [1, 0, 0, 1]
 displayBits(200); // [1, 1, 0, 0, 1, 0, 0, 0]
 ```
+
+
+### Counting Set Bits:
+
+### A More Efficient Way:
+
+### Practical Usage: A Bitmasked Enum:
