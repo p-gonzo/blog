@@ -6,12 +6,12 @@ tags: ['JavaScript', 'C++', 'Bit Twiddling']
 series: false
 cover_image: ./images/ones-and-zeros.jpg
 canonical_url: false
-description: ""
+description: "Recently, I came across a fun C++ challenge to count the number of set bits in an integer.  Spending a lot of time in the browser, I wanted to re-implement it in JavaScript."
 ---
 
-Recently I have been brushing up on my C++ for a client project.  In my spare time, I have been doing a number of toy problems to get comfortable with the syntax, and of these problems was a pretty cool challenge to **count the number of set bits** in an integer.  Spending a lot of time in the browser, I wanted to re-implement it in JavaScript.
+Recently, I came across a fun C++ challenge to **count the number of set bits** in an integer.  Spending a lot of time in the browser, I wanted to re-implement it in JavaScript.
 
-The challenge itself involves expressing integers not in their traditional base 10 representation, but instead their using base 2, binary, representation.  For those not familiar with base 10 to base 2 conversations, and what `set bits` are, check out the table below:
+The challenge itself involves expressing integers in their binary representation.  For those not familiar with base-10 to base-2 conversations, and what `set bits` are, check out the table below:
 
 
 |number|  128 |   64  |   32  |   16  |   8   |   4   |   2   |   0   |conversion    | set bits  |
@@ -24,9 +24,52 @@ The challenge itself involves expressing integers not in their traditional base 
 
 <br/>
 
+### A note on JavaScript Numbers:
+
+Under the hood, JavaScript represents *all* numbers as 64 bit floating point numbers.  When we use a bitwise operator on a JavaScript `number`, it is transformed into a 32 bit integer.
+
+We can demonstrate the conversion to a 32 bit integer by taking a JavaScript `number`, and performing a non mutating right bit shift by zero on it.
+
+
+```javascript
+let x = 10;
+y + 1 // = 6
+(y + 1) >> 0 // = 6 >> 0 = 6.  Six bit shifted to the right by zero bits is still six
+
+let y = 2147483647; // maximum value of a 32 bit integer.
+y + 1 // = 2147483648, number increments correctly.
+(y + 1) >> 0 // = -2147483648, bitwise right shift by zero. 32 bit integer overflows.
+```
+
+MDN, has a very good explanation of [some of the quirks](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators#Bitwise_logical_operators) of this conversion:
+
+> Numbers with more than 32 bits get their most significant bits discarded. For example, the following integer with more than 32 bits will be converted to a 32 bit integer
+
+> ```
+> Before: 11100110111110100000000000000110000000000001
+> After:              10100000000000000110000000000001
+> ```
+
+Don't expect bitwise operations to work as expected with numbers that need more than 32 bits of of memory, or any number over `2147483647`.
+
+```javascript
+
+// Show two different numbers from binary to base-10:
+
+parseInt("11100110111110100000000000000110000000000001", 2); // 15872588537857
+parseInt(            "10100000000000000110000000000001", 2); // 2684379137
+
+// Show those same numbers bit shifted to the right by zero:
+
+15872588537857 >> 0; // -1610588159
+2684379137 >> 0; // -1610588159
+
+// ¯\_(ツ)_/¯
+```
+
 ### Displaying integer bits in JavaScript:
 
-To begin our `countSetBits` journey, we can use the following helper function to display the base 2 representation of a base 10 integer:
+To see how we can implement `countSetBits`, we will use the following helper function to display the binary representation of an integer:
 
 
 ```javascript
@@ -40,20 +83,25 @@ const displayBits = n => {
 }
 ```
 
-*Note: there is a far simpler way of accomplishing base 10 to base 2 conversion this in JavaScript.  By running `(n).toString(2)`, we can return our integer as its stringified base 2 self.  We will instead however, refer to the formula above to illustrate several properties about bitwise operators.*
+**Note**: There is a far simpler way of displaying an integer to binary in JavaScript:
 
-As you can see in the function above, we will be storing the ones and zeros in an Array called `bits` and returning it's reversed value at the end of the function.
+```javascript
+(5).toString(2); // "101"
+(7).toString(2) // "111"
+```
 
-The interesting part of the function happens inside of the while loop.  Our function is passed an integer `n`, and while `n` is not falsey, we:
--   Evaluate `n & 1`, and push the result onto our Array
+We will instead use the `displayBits` function above to discuss bitwise operators.  The function stores the ones and zeros in an Array called `bits` and returns it's reversed value.
+
+In the loop, the function evaluates an integer `n`, and while `n` is not falsey:
+-   Evaluate `n & 1`, and push the result onto `bits`
 -   Reassign `n` to `n >> 1`
 
 
-#### Evaluate `n & 1`, and push the result onto our Array:
+#### Evaluate `n & 1`, and push the result onto `bits`:
 
-The first part of our loop uses the bitwise operator `&` (as distinct from the boolean operator `&&`), to evaluate `n` with `1`.
+The first part of our loop uses the bitwise operator `&` to evaluate `n` with `1`.
 
-The bitwise `&` operator is similar to the boolean `&&` operator in that it will return `1` if and only if both bits are set to `1`, otherwise it will return `0`, it is different in that it compares each bit in both numbers separately.
+The bitwise `&` operator is similar to the boolean `&&` operator in that it will return `1` if both bits are set to `1`, otherwise it will return `0`, it is different in that it compares each bit in both numbers separately.
 
 For example, if we use the numbers 5 and 7:
 
@@ -102,36 +150,4 @@ Putting these two aspects of our loop together allow us to display base 10 integ
 displayBits(5); // [1, 0, 1]
 displayBits(9); // [1, 0, 0, 1]
 displayBits(200); // [1, 1, 0, 0, 1, 0, 0, 0]
-```
-
-### A note on JavaScript Numbers:
-
-Under the hood, JavaScript represents *all* numbers as a 64 bit floating point numbers, so when we use a bitwise operator on a JavaScript number, the number is temporarily transformed into a 32 bit Integer.
-
-We can demonstrate the conversion to a 32 bit integer by taking a JavaScript number (64 bits), and performing a "non mutating" bit shift by zero on it.)
-
-
-```javascript
-let x = 2147483647; // maximum value of a 32 bit integer.
-x + 1 // 2147483648, number increments correctly.
-(x + 1) >> 0 // -2147483648, bitwise right shift by zero. 32 bit integer overflows.
-```
-
-MDN, has a very good explanation of [some of the quirks](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators#Bitwise_logical_operators) of this conversion, most notably:
-
-> Numbers with more than 32 bits get their most significant bits discarded. For example, the following integer with more than 32 bits will be converted to a 32 bit integer
-
-> ```
-> Before: 11100110111110100000000000000110000000000001
-> After:              10100000000000000110000000000001
-> ```
-
-The take away being, don't expect bitwise operations to work as expected with numbers that are represented with more than 32bits of memory:
-
-```javascript
-parseInt(            "10100000000000000110000000000001", 2); // 2684379137
-parseInt("11100110111110100000000000000110000000000001", 2); // 15872588537857
-
-2684379137 >> 0; // -1610588159
-15872588537857 >> 0; // -1610588159  ¯\_(ツ)_/¯
 ```
