@@ -171,6 +171,64 @@ displayBits(200); // [1, 1, 0, 0, 1, 0, 0, 0]
 
 ### Counting Set Bits:
 
+Modifying our `displayBits` function, we can change:
+- `const bits = [];` to `let setBits = 0;` 
+- `bits.push(n & 1);` to `setBits += (n & 1);`
+- `return bits.reverse();` to `return setBits;`
+
+Making our new function look like this:
+
+```javascript
+const countSetBits = n => {
+    let setBits = 0;
+    while(n) {
+        setBits += (n & 1);
+        n = n >> 1;
+    }
+    return setBits;
+}
+```
+
+This will certainly work, and when we try it out for ourselves we can see it yields the correct results:
+
+```javascript
+countSetBits(7); // 3
+countSetBits(8); // 1
+```
+
+However, there is a faster (and much more interesting) way to implement this function:
+
 ### A More Efficient Way:
 
-### Practical Usage: A Bitmasked Enum:
+```javascript
+const countSetBits = n => {
+    let setBits = 0;
+    while(n) {
+        n &= n - 1;
+        setBits ++;
+    }
+    return setBits;
+}
+```
+
+The first thing to notice is that in our while loop we are **always** incrementing setBits by 1. This means that the while loop *only* iterates *m* times, where *m* is the number of set bits.  In our original implementation, our loop always ran *n* times, where *n* is the number of bits taken to express the integer.
+
+Considering the integer **274,877,906,945** which expressed in binary is `100000000000000000000000000000000000001`:
+
+Our original implementation's while loop would have to run through **39 iterations**, one for each bit.  In our new implementation however, only **2 iterations** are needed.
+
+Granted, this scenario is somewhat hyperbolic, but it still demonstrates the potential time complexity savings of the second algorithm.
+
+The "special sauce" that gives the second algorithm its advantage lies in the operation, `n &= n -1;`, which reassigns *n* to the bitwise `&` comparison between itself and n - 1.
+
+Starting with n = 65, which is `1000001` in binary, we can see how the algorithm terminates in just two iterations:
+
+|Iteration| n | n - 1 | n & (n - 1) |
+|:--:|:--:|:--:|:--:|
+|1|`1000001`|`1000000`|`1000000`|
+|2|`1000000`|`0111111`|`0000000`|
+|3|`0000000`|N/A|N/A|
+
+<br />
+
+We can see that by the time the third iteration wants to start, *n* is already 0, so the iteration never fires and the function exits.
