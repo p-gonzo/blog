@@ -43,6 +43,8 @@ ForEach<int>(nums, [](int num&){ std::cout << num << std::endl; });
 
 For an overview of Lambda Expression syntax, check out the docs from Microsoft [here](https://docs.microsoft.com/en-us/cpp/cpp/lambda-expressions-in-cpp).
 
+### `Map()`:
+
 Because ForEach accepts a callback function, we can use it to compose our three main methods.  Starting with Map, we might write something like this:
 
 ```cpp
@@ -55,4 +57,30 @@ std::vector<T2> Map(std::vector<T> &items, std::function<T2(T &item)> mapCb)
 }
 ```
 
-We can see that `Map` is a templated function that accepts two types
+We can see that `Map` is a templated function that accepts two types: `T` - the data type contained in the original array, and `T2` - the data type contained in returned array.  The function accepts the parameters `items` a `std::vector<T>&` and a callback function.  The callback accepts a `T&` and returns a `T2`.
+
+Map creates a `std::vector<T2>` and returns it at the end of the function call.  In between, it invokes `ForEach`, passing it the original `std::vector<T>` and a callback function that pushes the item onto the `mappedVec` after calling the user supplied `mapCb` on it.
+
+It's useful to note that there are two callbacks occurring: 1) the user-supplied callback which is nested inside 2) the callback that gets consumed by `ForEach`.  
+
+Finally we see the `[&mappedVec, &mapCb]` syntax at the start of our lambda expression.  This allows our `mappedVec` and `mapCb` to remain in scope as the expression `mappedVec.emplace_back(mapCb(item))` gets passed to `ForEach`.  This syntax allows us to create a [closure](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) around those two variables.
+
+Having the two types allows us to return a mapped array of a different type from the original, for example:
+
+```cpp
+std::vector<int> nums { 1, 2, 3, 4, 5 };
+
+struct IntContainer
+{
+    IntContainer(int v): val(v) { }
+    int val {0};
+};
+
+auto mappedVed = Map<int, IntContainer>(nums, [](int &num) {return IntContainer(num * num); });
+```
+
+The example above maps between a `std::vector` containing the `int` type and `std::vector` containing a custom type, `IntContainer`. 
+
+### `Filter()` and `Reduce()`:
+
+We can implement `Filter()` and `Reduce()` following a similar pattern
