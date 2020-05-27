@@ -115,6 +115,40 @@ The T2 value is passed as a const ref, `start`, which is assigned to a non-const
 memo = reduceCb(item, memo);
 ```
 
-## Part II - Using Iterators:
+## Part II - Using iterators and template specialization:
 
-Though the above code works well, it will only work if our containing class is a `std::vector`.  What if we want to Filter a `std::string` or Reduce a `std::list`?
+Though the above code works well, it will only work if our containing class is a `std::vector`.  What if we want to Filter a `std::string` or Reduce a `std::list`?  To do this we'll refactor or original functions above to use iterators and template specialization.
+
+### `ForEach()`:
+
+To cut down on the amount of boilerplate, we're going to use a `using` clause that allows us to grab the type contained within an iterator
+
+```cpp
+template <typename IteratorType>
+using ItemType = typename std::iterator_traits<typename IteratorType::iterator>::value_type;
+```
+
+With that in place, we can implement our new `ForEach` like so:
+
+```cpp
+template <typename IteratorType>
+void ForEach(IteratorType &items, std::function<void(ItemType<IteratorType> &item)> forEachCb)
+{
+    for (typename IteratorType::iterator ptr = items.begin(); ptr != items.end(); ++ptr)
+        forEachCb(*ptr);
+}
+```
+
+From our original ForEach function we can see that our iteration method has changed.  Instead of using a C++ [range-based for loop](https://en.cppreference.com/w/cpp/language/range-for), we're using the [iterator interface](https://en.cppreference.com/w/cpp/iterator/iterator) and a normal for loop to iterate though each item and invoke a callback on the dereferenced pointer.
+
+The syntax used in the function declaration is messier, however it allows us to do the following:
+
+```cpp
+std::vector<int> nums { 1, 2, 3, 4, 5 };
+std::string word { "Hello" };
+
+ForEach<std::vector<int>>(nums, [](int &num) { std::cout << num << std::endl; });
+ForEach<std::string>(word,[](char &letter) { std::cout << letter << std::endl; });
+```
+
+As you can see, our ForEach function is now agnostic as to whether or not we are passing a `std::string`, `std::vector`, `std::list`, or any other containing class so long as it implements the iterator interface.
