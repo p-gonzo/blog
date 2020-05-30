@@ -194,3 +194,35 @@ MemoType Reduce(IteratorType &items, std::function<MemoType(ItemType<IteratorTyp
 }
 ```
 
+With this out of the way, we can use our functions in any way we want:
+
+Like using Map to rotate the characters in a word:
+```cpp
+std::string word { "Hello" };
+auto mappedWord = Map<std::string>(word, [](char &chr) { return static_cast<char>(chr + 1); });
+```
+
+Or reducing the same word into the sum of its character integer representations:
+
+```cpp
+int wordToNum = Reduce<std::string, int>(word, [](char &chr, int &memo){ return memo + (int)chr; }, 0);
+// The above equals exactly 500 🤯
+```
+
+We can even operate on a `std::map`:
+
+```cpp
+std::map<int,char> items {std::pair<int, char>(5, 'a'), std::pair<int, char>(6, 'b'), std::pair<int, char>(7, 'c')};
+ForEach<std::map<int,char>>(items, [](std::pair<int,char> pair){ std::cout << pair.first << ": " << pair.second << std::endl; } );
+```
+
+## Final Thoughts:
+
+Hopefully this was a useful exercise in using iterators and templated functions to recreate the Filter, Map, and Reduce functions that exist on [Array.prototype](https://developer.mozilla.org/tr/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype) in JavaScript.  These recreations are mostly for academic intrigue, and shouldn't be used in production.
+
+
+Our Functions are a little more flexible than the native Javascript versions as they can work on any containing class that implements the iterator interface.  However, they also lack some of the niceties provided in the native versions or in a library such as [Underscore.js](https://underscorejs.org/).  For example, Underscore's Reduce implementation accounts for the following:
+
+> If no memo is passed to the initial invocation of reduce, the iteratee is not invoked on the first element of the list. The first element is instead passed as the memo in the invocation of the iteratee on the next element in the list.
+
+Another area for improvement is ensuring [const correctness](https://isocpp.org/wiki/faq/const-correctness#overview-const) and memory optimization in our function signatures.  Many of our functions and lambdas can and should be using more `const &` rather than passing by value.
