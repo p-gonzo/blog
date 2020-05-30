@@ -1,8 +1,8 @@
 ---
-title: Implementing Map, Filter, and Reduce in C++ with Iterators and Template Specialization
+title: Implementing Map, Filter, and Reduce in C++ with Templates Iterators
 date: 2020-05-20
 published: true
-tags: ['C++', 'Functional Programing', 'Template Specialization', 'Lambda Expressions']
+tags: ['C++', 'Functional Programing', 'Generics', 'Templates', 'Lambda Expressions']
 series: false
 cover_image: ./images/cpp-map-filter-reduce.png
 canonical_url: false
@@ -52,7 +52,7 @@ template <typename T, typename T2>
 std::vector<T2> Map(std::vector<T> &items, std::function<T2(T &item)> mapCb)
 {
     std::vector<T2> mappedVec;
-    ForEach<T>(items, [&mappedVec, &mapCb](T &item) { mappedVec.emplace_back(mapCb(item)); });
+    ForEach<T>(items, [&mappedVec, &mapCb](T &item) { mappedVec.push_back(mapCb(item)); });
     return mappedVec;
 }
 ```
@@ -63,7 +63,7 @@ Map creates a `std::vector<T2>` and returns it at the end of the function call. 
 
 It's useful to note that there are two callbacks occurring: **1)** the user-supplied callback which is nested inside **2)** the callback that gets consumed by ForEach.  
 
-Finally we see the `[&mappedVec, &mapCb]` syntax at the start of our lambda expression.  This allows our `mappedVec` and `mapCb` to remain in scope as the expression ```mappedVec.emplace_back(mapCb(item))``` gets passed to ForEach.  This syntax allows us to create a [closure](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) around those two variables.
+Finally we see the `[&mappedVec, &mapCb]` syntax at the start of our lambda expression.  This allows our `mappedVec` and `mapCb` to remain in scope as the expression ```mappedVec.push_back(mapCb(item))``` gets passed to ForEach.  This syntax allows us to create a [closure](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) around those two variables.
 
 We can then invoke our Map function like so: 
 
@@ -90,7 +90,7 @@ template <typename T>
 std::vector<T> Filter(std::vector<T> &items, std::function<bool(T &item)> filterCb)
 {
     std::vector<T> filteredVec;
-    ForEach<T>(items, [&filteredVec, &filterCb](T &item) { if (filterCb(item)) filteredVec.emplace_back(item); });
+    ForEach<T>(items, [&filteredVec, &filterCb](T &item) { if (filterCb(item)) filteredVec.push_back(item); });
     return filteredVec;
 }
 ```
@@ -115,9 +115,9 @@ The T2 value is passed as a const ref, `start`, which is assigned to a non-const
 memo = reduceCb(item, memo);
 ```
 
-## Part II - Using iterators and template specialization:
+## Part II - Using iterators:
 
-Though the above code works well, it will only work if our containing class is a `std::vector`.  What if we want to Filter a `std::string` or Reduce a `std::list`?  To do this we'll refactor or original functions above to use iterators and template specialization.
+Though the above code works well, it will only work if our containing class is a `std::vector`.  What if we want to Filter a `std::string` or Reduce a `std::list`?  To do this we'll refactor or original functions above to use the iterator interface.
 
 ### `ForEach()`:
 
@@ -139,16 +139,58 @@ void ForEach(IteratorType &items, std::function<void(ItemType<IteratorType> &ite
 }
 ```
 
-From our original ForEach function we can see that our iteration method has changed.  Instead of using a C++ [range-based for loop](https://en.cppreference.com/w/cpp/language/range-for), we're using the [iterator interface](https://en.cppreference.com/w/cpp/iterator/iterator) and a normal for loop to iterate though each item and invoke a callback on the dereferenced pointer.
+Similar to our original ForEach, the signature requires two parameters, however the first parameter, `items`, is no longer a `std::vector<T>`, but instead an `IteratorType`.  The second parameter is still a `std::function` though it's signature is different in that instead of each item being of type `T`, they're of type `<ItemType<IteratorType>>`.
+
+Our iteration method has also changed.  Instead of using a C++ [range-based for loop](https://en.cppreference.com/w/cpp/language/range-for), we're using the [iterator interface](https://en.cppreference.com/w/cpp/iterator/iterator) and a normal for loop to iterate though each item and invoke a callback on the dereferenced pointer.
+
 
 The syntax used in the function declaration is messier, however it allows us to do the following:
 
 ```cpp
+std::list<char> chars {'a', 'b', 'c', 'd'};
 std::vector<int> nums { 1, 2, 3, 4, 5 };
 std::string word { "Hello" };
 
+ForEach<std::list<char>>(chars, [](char &chr){ std::cout << chr << std::endl; });
 ForEach<std::vector<int>>(nums, [](int &num) { std::cout << num << std::endl; });
 ForEach<std::string>(word,[](char &letter) { std::cout << letter << std::endl; });
 ```
 
-As you can see, our ForEach function is now agnostic as to whether or not we are passing a `std::string`, `std::vector`, `std::list`, or any other containing class so long as it implements the iterator interface.
+As you can see, our ForEach function is now agnostic as to whether we are passing a `std::string`, `std::vector`, `std::list`, or any other containing class so long as it implements the iterator interface.  The containing logic is identical to the original Map function:
+
+### `Map()`, `Filter()`, and `Reduce()`:
+
+Our new Map function's signature is almost identical to our new ForEach signature, with the only difference being that the callback now returns a `ItemType<IteratorType>` instead of `void`.
+
+```cpp
+template <typename IteratorType>
+IteratorType Map(IteratorType &items, std::function<ItemType<IteratorType>(ItemType<IteratorType> &item)> mapCb)
+{
+    IteratorType mappedIterator;
+    ForEach<IteratorType>(items, [&mappedIterator, &mapCb](auto &item) { mappedIterator.push_back(mapCb(item)); });
+    return mappedIterator;
+}
+```
+
+Filter and Reduce are also updated accordingly:
+
+```cpp
+template <typename IteratorType>
+IteratorType Filter(IteratorType &items, std::function<bool(ItemType<IteratorType> &item)> filterCb)
+{
+    IteratorType filteredIterator;
+    ForEach<IteratorType>(items, [&filteredIterator, &filterCb](auto &item) { if (filterCb(item)) filteredIterator.push_back(item); });
+    return filteredIterator;
+}
+```
+
+```cpp
+template <typename IteratorType, typename MemoType>
+MemoType Reduce(IteratorType &items, std::function<MemoType(ItemType<IteratorType> &item, MemoType &memo)> reduceCb, const MemoType &start)
+{
+    MemoType memo = start;
+    ForEach<IteratorType>(items, [&memo, &reduceCb](auto &item) { memo = reduceCb(item, memo); });
+    return memo;
+}
+```
+
