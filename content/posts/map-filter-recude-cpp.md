@@ -1,5 +1,5 @@
 ---
-title: Implementing Map, Filter, and Reduce in C++ with Templates Iterators
+title: Building Map, Filter, and Reduce in C++ with Templates and Iterators
 date: 2020-05-20
 published: true
 tags: ['C++', 'Functional Programing', 'Generics', 'Templates', 'Lambda Expressions']
