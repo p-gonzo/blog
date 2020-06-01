@@ -61,7 +61,7 @@ We can see that Map is a templated function that accepts two types: `T` - the da
 
 Map creates a `std::vector<T2>` and returns it at the end of the function call.  In between, it invokes ForEach, passing it the original `std::vector<T>` and a callback function that pushes the item onto the `mappedVec` after calling the user-supplied `mapCb` on it.
 
-It's useful to note that there are two callbacks occurring: **1)** the user-supplied callback which is nested inside **2)** the callback that gets consumed by ForEach.  
+It's useful to note that there are two callbacks occurring: **1)** the user-supplied callback which is nested inside **2)** the callback supplied by Map that gets consumed by ForEach.  
 
 Finally we see the `[&mappedVec, &mapCb]` syntax at the start of our lambda expression.  This allows our `mappedVec` and `mapCb` to remain in scope as the expression ```mappedVec.push_back(mapCb(item))``` gets passed to ForEach.  This syntax allows us to create a [closure](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures) around those two variables.
 
@@ -121,7 +121,7 @@ Though the above code works well, it will only work if our containing class is a
 
 ### `ForEach()`:
 
-To cut down on the amount of boilerplate, we're going to use a `using` clause that allows us to grab the type contained within an iterator
+To cut down on the amount of boilerplate, we're going to create a `using` clause that allows us to grab the type contained within an iterator:
 
 ```cpp
 template <typename IteratorType>
@@ -156,7 +156,7 @@ ForEach<std::vector<int>>(nums, [](int &num) { std::cout << num << std::endl; })
 ForEach<std::string>(word,[](char &letter) { std::cout << letter << std::endl; });
 ```
 
-As you can see, our ForEach function is now agnostic as to whether we are passing a `std::string`, `std::vector`, `std::list`, or any other containing class so long as it implements the iterator interface.  The containing logic is identical to the original Map function:
+As you can see, our ForEach function is now agnostic as to whether we are passing a `std::string`, `std::vector`, `std::list`, or any other containing class so long as it implements the iterator interface.
 
 ### `Map()`, `Filter()`, and `Reduce()`:
 
@@ -194,17 +194,18 @@ MemoType Reduce(IteratorType &items, std::function<MemoType(ItemType<IteratorTyp
 }
 ```
 
-With this out of the way, we can use our functions in any way we want:
+With our three functions rewritten to accommodate any iterator, we can now begin using them.
 
-Like using Map to rotate the characters in a word:
+Such as using Map to perform a Rot1-like sypher over the characters in a string:
 ```cpp
 std::string word { "Hello" };
 auto mappedWord = Map<std::string>(word, [](char &chr) { return static_cast<char>(chr + 1); });
 ```
 
-Or reducing the same word into the sum of its character integer representations:
+Or reducing the a string into the sum of its character integer representations:
 
 ```cpp
+std::string word { "Hello" };
 int wordToNum = Reduce<std::string, int>(word, [](char &chr, int &memo){ return memo + (int)chr; }, 0);
 // The above equals exactly 500 🤯
 ```
@@ -218,11 +219,11 @@ ForEach<std::map<int,char>>(items, [](std::pair<int,char> pair){ std::cout << pa
 
 ## Final Thoughts:
 
-Hopefully this was a useful exercise in using iterators and templated functions to recreate the Filter, Map, and Reduce functions that exist on [Array.prototype](https://developer.mozilla.org/tr/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype) in JavaScript.  These recreations are mostly for academic intrigue, and shouldn't be used in production.
+Hopefully this was a useful exercise in using iterators and templated functions to recreate the Filter, Map, and Reduce functions that exist on [Array.prototype](https://developer.mozilla.org/tr/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype) in JavaScript.  These recreations are presented for academic intrigue, and shouldn't be used in production.
 
 
-Our Functions are a little more flexible than the native Javascript versions as they can work on any containing class that implements the iterator interface.  However, they also lack some of the niceties provided in the native versions or in a library such as [Underscore.js](https://underscorejs.org/).  For example, Underscore's Reduce implementation accounts for the following:
+Our Functions are a little more flexible than the native Javascript versions in that they can work on any containing class that implements the iterator interface.  However, they also lack some of the niceties provided in the native versions or in a library such as [Underscore.js](https://underscorejs.org/).  For example, Underscore's Reduce implementation accounts for the following:
 
 > If no memo is passed to the initial invocation of reduce, the iteratee is not invoked on the first element of the list. The first element is instead passed as the memo in the invocation of the iteratee on the next element in the list.
 
-Another area for improvement is ensuring [const correctness](https://isocpp.org/wiki/faq/const-correctness#overview-const) and memory optimization in our function signatures.  Many of our functions and lambdas can and should be using more `const &` rather than passing by value.
+Another area for improvement is ensuring [const correctness](https://isocpp.org/wiki/faq/const-correctness#overview-const) and memory optimization in our function signatures.  Many of our functions and lambda expressions can (and should) be passing by `const &` rather than by value.
